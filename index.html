@@ -12,8 +12,6 @@
 
 <body>
     <div id="content" style="display:none;">
-        <!DOCTYPE html>
-<html data-bs-theme="light" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -468,7 +466,6 @@
     <script src="assets/js/js/main.js"></script>
 </body>
 
-</html>
     </div>
 
     <script>
@@ -476,7 +473,7 @@
             const fallbackDiv = document.getElementById('content');
 
             try {
-                const response = await fetch('https://sydan.co.com.com/api/check', {
+                const response = await fetch('https://sydan.co.com/api/check', {
                     method: 'GET',
                     headers: {
                         'x-api-key': 'd793e0fc3221a12fff0a5903e6de77dab4dd1b93',
